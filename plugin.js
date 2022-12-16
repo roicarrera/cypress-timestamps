@@ -1,6 +1,6 @@
 function getUTC() {
   const now = new Date()
-  return now.toISOString()
+  return now.toString()
 }
 
 function registerCypressTimestamps(on) {
