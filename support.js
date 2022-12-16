@@ -33,7 +33,7 @@ function registerCypressTimestamps(options = defaultOptions) {
     // https://on.cypress.io/catalog-of-events
     Cypress.on('fail', (err) => {
       console.error(err)
-      const at = new Date().toISOString()
+      const at = new Date().toString()
       err.message = at + '\n' + err.message
       throw err
     })
@@ -41,18 +41,20 @@ function registerCypressTimestamps(options = defaultOptions) {
 
   if (combinedOptions.commandLog) {
     Cypress.on('command:start', ({ attributes }) => {
-      if (combinedOptions.commandLog === 'all' || attributes.type !== 'child') {
-        if (combinedOptions.elapsed && testStartedAt) {
-          const elapsed = new Date() - testStartedAt
-          const formatted = format(elapsed, { leading: true })
-          Cypress.log({
-            name: `${formatted} - ${attributes.name}`,
-          })
-        } else {
-          const at = new Date().toISOString()
-          Cypress.log({
-            name: `${at} - ${attributes.name}`,
-          })
+      if (attributes.name !== 'then' && attributes.name !== 'wrap' && attributes.name !== 'task') {
+        if (combinedOptions.commandLog === 'all' || attributes.type !== 'child') {
+          if (combinedOptions.elapsed && testStartedAt) {
+            const elapsed = new Date() - testStartedAt
+            const formatted = format(elapsed, { leading: true })
+            Cypress.log({
+              name: `${formatted} - ${attributes.name}`,
+            })
+          } else {
+            const at = new Date().toString()
+            Cypress.log({
+              name: `${at} - ${attributes.name}`,
+            })
+          }
         }
       }
     })
